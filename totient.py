@@ -63,38 +63,48 @@ def gcd(a, b):
     return a
 
 def totient(n):
+    print "Totient of ", n
     """
     Compute the number of positives < n that are
     relatively prime to n -- good solution!
     """
+    # Case 1. n == 1
     if n == 1:
+        print "Case 1"
         return 0
     
     factors = pfactorsbrute(n)
+    #Case 2. n is prime
     if len(factors) == 0:
+        print "Case 2"
         return n-1
     
-    case2 = False
+    #Case 3. n has two relatively prime factors
     if len(factors) == 2:
-        case2 = True
         mn = []
         for factor in factors:
-            if factors[factor] != 1:
-                case2 = False
-            else:
-                mn.append(factor)
+            exp = factors[factor]
+            mn.append(factor**exp)
+            
+        if gcd(mn[0], mn[1]) == 1:
+            print "Case 3. %d and %d are coprime" % (mn[0], mn[1])
+            return totient(mn[0])*totient(mn[1])
     
-    if case2:
-        return totient(mn[0]) * totient(mn[1])
-        
+    print "Cases 4 and 5"    
     components = []
     for factor in factors:
         exp = factors[factor]
         components.append(factor**exp - factor**(exp-1))
-        
+    
+    print "Prime factors: %s" % (factors)    
     tot = reduce(lambda x, y: x*y, components)
     return tot
 
 if __name__ == "__main__":
-    print pfactorsbrute(240)
     print totient(240)
+    print
+    print totient(13)
+    print
+    print totient(10)
+    print
+    print totient(49)
